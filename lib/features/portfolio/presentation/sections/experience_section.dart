@@ -6,7 +6,7 @@ class ExperienceSection extends StatelessWidget {
 
   static const _experiences = [
     _WorkExperience(
-      company: 'Code Thinker',
+      company: 'Codes Thinker',
       role: 'Flutter Mobile Application Developer',
       duration: '6 months',
       period: 'Mar 2026 - Aug 2026',
