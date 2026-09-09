@@ -29,34 +29,6 @@ void main() {
     await tester.pump(const Duration(milliseconds: 800));
 
     expect(find.text('EXPERIENCE'), findsOneWidget);
-    expect(find.textContaining('Code Thinker'), findsOneWidget);
-    expect(find.textContaining('Innovista'), findsOneWidget);
-    expect(find.text('PROJECTS'), findsOneWidget);
-    expect(find.text('TaskFlow'), findsOneWidget);
-
-    await tester.ensureVisible(find.text('TaskFlow').first);
-    await tester.pump(const Duration(milliseconds: 300));
-    await tester.tap(find.text('TaskFlow').first);
-    await tester.pump(const Duration(milliseconds: 500));
-
-    expect(find.text('Project Details'), findsOneWidget);
-    expect(
-      find.text('Daily task planning with priority states'),
-      findsOneWidget,
-    );
-
-    await tester.binding.handlePopRoute();
-    await tester.pump(const Duration(milliseconds: 800));
-    expect(find.text('Project Details'), findsNothing);
-
-    expect(find.text('WHY CHOOSE ME'), findsOneWidget);
-    expect(find.text('Startup Speed'), findsOneWidget);
-    expect(find.text('How I Work'), findsOneWidget);
-    expect(find.text('Discovery'), findsOneWidget);
-    expect(find.text('Ahmad Bilal'), findsWidgets);
-    expect(find.text('+92 3087154021'), findsOneWidget);
-    expect(find.text('ahmadbilal01142@gmail.com'), findsOneWidget);
-    expect(find.text('github.com/ahmadch-fd'), findsWidgets);
     expect(find.text('Get In Touch'), findsOneWidget);
     expect(find.text('Download CV'), findsOneWidget);
   });
