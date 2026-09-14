@@ -13,31 +13,31 @@ class _WhyChooseMeSectionState extends State<WhyChooseMeSection>
   static const _reasons = [
     _Reason(
       title: 'Startup Speed',
-      badge: '30% faster development',
+      badge: '30% faster delivery',
       description: 'MVP-ready Flutter apps with clean architecture, responsive UI, and practical delivery speed.',
       icon: Icons.rocket_launch_rounded,
-      accent: Color(0xFF19A7FF),
+      accent: Color(0xFF06B6D4),
     ),
     _Reason(
       title: 'Production Ready',
       badge: 'Built to scale',
       description: 'Apps structured for real users with Firebase, API integrations, caching, and stable releases.',
       icon: Icons.shield_rounded,
-      accent: Color(0xFFE24DD8),
+      accent: Color(0xFF8B5CF6),
     ),
     _Reason(
       title: 'Quality First',
-      badge: 'Maintainable by anyone',
+      badge: 'Maintainable code',
       description: 'Reusable widgets, readable code, focused debugging, and patterns that keep projects easy to grow.',
       icon: Icons.local_fire_department_rounded,
-      accent: Color(0xFFFF6A2A),
+      accent: Color(0xFFFF6B6B),
     ),
     _Reason(
       title: 'Full-Stack Thinking',
-      badge: 'No delays',
+      badge: 'End-to-end delivery',
       description: 'I understand frontend, backend, Firebase, REST APIs, Play Console flow, and complete app delivery.',
       icon: Icons.check_circle_rounded,
-      accent: Color(0xFF16D486),
+      accent: Color(0xFF10B981),
     ),
   ];
 
@@ -61,43 +61,32 @@ class _WhyChooseMeSectionState extends State<WhyChooseMeSection>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 112),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1180),
           child: Column(
             children: [
-              Text(
-                'WHY CHOOSE ME',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: const Color(0xFF29B6F6),
-                  fontSize: 40,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 2.2,
-                ),
-              ),
-              const SizedBox(height: 16),
-              const _Headline(),
-              const SizedBox(height: 58),
+              _WhyChooseHeader(),
+              const SizedBox(height: 60),
               LayoutBuilder(
                 builder: (context, constraints) {
                   final width = constraints.maxWidth;
                   final columnCount = width >= 760 ? 2 : 1;
-                  final spacing = columnCount == 1 ? 18.0 : 28.0;
+                  final spacing = 24.0;
                   final cardWidth =
                       (width - spacing * (columnCount - 1)) / columnCount;
 
                   return Wrap(
                     spacing: spacing,
-                    runSpacing: 28,
+                    runSpacing: spacing,
                     children: [
-                      for (var index = 0; index < _reasons.length; index++)
+                      for (var i = 0; i < _reasons.length; i++)
                         _StaggeredReasonCard(
                           animation: _controller,
-                          index: index,
+                          index: i,
                           width: cardWidth,
-                          reason: _reasons[index],
+                          reason: _reasons[i],
                         ),
                     ],
                   );
@@ -111,35 +100,51 @@ class _WhyChooseMeSectionState extends State<WhyChooseMeSection>
   }
 }
 
-class _Headline extends StatelessWidget {
-  const _Headline();
-
+class _WhyChooseHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.displayLarge?.copyWith(
-      fontSize: 38,
-      fontWeight: FontWeight.w900,
-      height: 1.22,
-      letterSpacing: 0,
-    );
-
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        style: style,
-        children: const [
-          TextSpan(text: "I'm not just a "),
-          TextSpan(
-            text: 'developer.',
-            style: TextStyle(color: Color(0xFF29B6F6)),
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
+            color: AppColors.accent.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
           ),
-          TextSpan(text: " I'm your "),
-          TextSpan(
-            text: 'technical partner.',
-            style: TextStyle(color: Color(0xFF29B6F6)),
+          child: Text(
+            'WHY CHOOSE ME',
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: AppColors.accent,
+              letterSpacing: 2.5,
+              fontSize: 11,
+            ),
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 18),
+        RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+              fontWeight: FontWeight.w900,
+              height: 1.2,
+              letterSpacing: -0.5,
+            ),
+            children: const [
+              TextSpan(text: "I'm not just a "),
+              TextSpan(
+                text: 'developer.',
+                style: TextStyle(color: AppColors.accentCyan),
+              ),
+              TextSpan(text: "\nI'm your "),
+              TextSpan(
+                text: 'technical partner.',
+                style: TextStyle(color: AppColors.accentCyan),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -175,7 +180,7 @@ class _StaggeredReasonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final start = index * 0.1;
+    final start = index * 0.12;
     final cardAnimation = CurvedAnimation(
       parent: animation,
       curve: Interval(start, 1, curve: Curves.easeOutCubic),
@@ -184,12 +189,11 @@ class _StaggeredReasonCard extends StatelessWidget {
     return AnimatedBuilder(
       animation: cardAnimation,
       builder: (context, child) {
-        final value = cardAnimation.value;
-
+        final v = cardAnimation.value;
         return Opacity(
-          opacity: value,
+          opacity: v,
           child: Transform.translate(
-            offset: Offset(0, (1 - value) * 34),
+            offset: Offset(0, (1 - v) * 34),
             child: child,
           ),
         );
@@ -201,7 +205,6 @@ class _StaggeredReasonCard extends StatelessWidget {
 
 class _ReasonCard extends StatefulWidget {
   const _ReasonCard({required this.width, required this.reason});
-
   final double width;
   final _Reason reason;
 
@@ -215,11 +218,6 @@ class _ReasonCardState extends State<_ReasonCard> {
   @override
   Widget build(BuildContext context) {
     final reason = widget.reason;
-    final hoverSurface = Color.lerp(
-      const Color(0xFF151B2E),
-      reason.accent,
-      0.12,
-    )!;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -236,79 +234,91 @@ class _ReasonCardState extends State<_ReasonCard> {
             curve: Curves.easeOutCubic,
             padding: const EdgeInsets.all(28),
             decoration: BoxDecoration(
-              color: _isHovered ? hoverSurface : const Color(0xFF151B2E),
-              borderRadius: BorderRadius.circular(10),
+              color: _isHovered
+                  ? Color.lerp(AppColors.surfaceCard, reason.accent, 0.08)
+                  : AppColors.surfaceCard,
+              borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: _isHovered
-                    ? reason.accent
-                    : const Color(0xFF1A6B90).withValues(alpha: 0.58),
+                    ? reason.accent.withValues(alpha: 0.7)
+                    : AppColors.cardBorder,
               ),
               boxShadow: [
                 BoxShadow(
                   color: reason.accent.withValues(alpha: _isHovered ? 0.22 : 0),
-                  blurRadius: _isHovered ? 34 : 0,
-                  spreadRadius: _isHovered ? 1 : 0,
+                  blurRadius: 34,
+                  spreadRadius: 1,
                   offset: const Offset(0, 18),
                 ),
               ],
             ),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 160),
+              constraints: const BoxConstraints(minHeight: 170),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Icon container with gradient
                   AnimatedContainer(
-                    width: 42,
-                    height: 42,
                     duration: const Duration(milliseconds: 260),
+                    width: 52,
+                    height: 52,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                         colors: _isHovered
-                            ? [reason.accent, AppColors.primary]
+                            ? [reason.accent, AppColors.accent]
                             : [
-                                reason.accent,
-                                reason.accent.withValues(alpha: 0.82),
+                                reason.accent.withValues(alpha: 0.9),
+                                reason.accent.withValues(alpha: 0.6),
                               ],
                       ),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: reason.accent.withValues(
+                            alpha: _isHovered ? 0.4 : 0.15,
+                          ),
+                          blurRadius: _isHovered ? 20 : 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                    child: Icon(reason.icon, color: Colors.white, size: 22),
+                    child: Icon(reason.icon, color: Colors.white, size: 24),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 22),
                   Text(
                     reason.title,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: AppColors.foreground,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.2,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  DecoratedBox(
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
-                      color: reason.accent.withValues(alpha: 0.14),
-                      borderRadius: BorderRadius.circular(999),
+                      color: reason.accent.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: reason.accent.withValues(alpha: 0.3),
+                      ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      child: Text(
-                        reason.badge,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: reason.accent,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0,
-                        ),
-                      ),
+                    child: Text(
+                      reason.badge,
+                      style: Theme.of(context).textTheme.labelMedium
+                          ?.copyWith(color: reason.accent, fontSize: 11),
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 16),
                   Text(
                     reason.description,
                     style: Theme.of(context).textTheme.bodyMedium
-                        ?.copyWith(color: const Color(0xFFE5E7EB), height: 1.6),
+                        ?.copyWith(color: AppColors.muted, height: 1.65),
                   ),
                 ],
               ),

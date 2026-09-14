@@ -15,21 +15,29 @@ class _HowIWorkSectionState extends State<HowIWorkSection>
       number: '01',
       title: 'Discovery',
       description: 'Deep dive into your business needs, user pain points, and technical requirements.',
+      icon: Icons.explore_rounded,
+      accent: Color(0xFF06B6D4),
     ),
     _WorkStep(
       number: '02',
       title: 'Architecture',
       description: 'Design scalable systems with clean separation of concerns and a clear growth roadmap.',
+      icon: Icons.architecture_rounded,
+      accent: Color(0xFF8B5CF6),
     ),
     _WorkStep(
       number: '03',
       title: 'Development',
       description: 'Rapid iteration with daily demos, feedback loops, and flexible improvements.',
+      icon: Icons.code_rounded,
+      accent: Color(0xFFFF6B6B),
     ),
     _WorkStep(
       number: '04',
       title: 'Launch & Scale',
       description: 'Performance optimization, monitoring, analytics, and stable release support.',
+      icon: Icons.rocket_launch_rounded,
+      accent: Color(0xFF10B981),
     ),
   ];
 
@@ -53,53 +61,79 @@ class _HowIWorkSectionState extends State<HowIWorkSection>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 108),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1180),
           child: Column(
             children: [
-              Text(
-                'How I Work',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: AppColors.foreground,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                ),
+              // Section header
+              Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: AppColors.primary.withValues(alpha: 0.4),
+                      ),
+                    ),
+                    child: Text(
+                      'PROCESS',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: AppColors.primary,
+                        letterSpacing: 2.5,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    'How I Work',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 56),
+              const SizedBox(height: 60),
               LayoutBuilder(
                 builder: (context, constraints) {
                   final width = constraints.maxWidth;
                   final columnCount = width >= 980
                       ? 4
-                      : width >= 700
+                      : width >= 640
                       ? 2
                       : 1;
-                  final spacing = columnCount == 1 ? 20.0 : 28.0;
+                  final spacing = 22.0;
                   final cardWidth =
                       (width - spacing * (columnCount - 1)) / columnCount;
 
                   return Wrap(
                     spacing: spacing,
-                    runSpacing: 28,
+                    runSpacing: spacing,
                     children: [
-                      for (var index = 0; index < _steps.length; index++)
+                      for (var i = 0; i < _steps.length; i++)
                         _AnimatedStepCard(
                           animation: _controller,
-                          index: index,
+                          index: i,
                           width: cardWidth,
+                          step: _steps[i],
                           showConnector:
-                              columnCount == 4 && index < _steps.length - 1,
-                          step: _steps[index],
+                              columnCount == 4 && i < _steps.length - 1,
                         ),
                     ],
                   );
                 },
               ),
-              const SizedBox(height: 70),
-              const Divider(color: Color(0xFF193C55), height: 1),
+              const SizedBox(height: 72),
+              Divider(color: AppColors.glassBorder, height: 1),
             ],
           ),
         ),
@@ -113,11 +147,15 @@ class _WorkStep {
     required this.number,
     required this.title,
     required this.description,
+    required this.icon,
+    required this.accent,
   });
 
   final String number;
   final String title;
   final String description;
+  final IconData icon;
+  final Color accent;
 }
 
 class _AnimatedStepCard extends StatelessWidget {
@@ -125,15 +163,15 @@ class _AnimatedStepCard extends StatelessWidget {
     required this.animation,
     required this.index,
     required this.width,
-    required this.showConnector,
     required this.step,
+    required this.showConnector,
   });
 
   final Animation<double> animation;
   final int index;
   final double width;
-  final bool showConnector;
   final _WorkStep step;
+  final bool showConnector;
 
   @override
   Widget build(BuildContext context) {
@@ -145,45 +183,42 @@ class _AnimatedStepCard extends StatelessWidget {
     return AnimatedBuilder(
       animation: stepAnimation,
       builder: (context, child) {
-        final value = stepAnimation.value;
-
+        final v = stepAnimation.value;
         return Opacity(
-          opacity: value,
+          opacity: v,
           child: Transform.translate(
-            offset: Offset(0, (1 - value) * 32),
+            offset: Offset(0, (1 - v) * 32),
             child: child,
           ),
         );
       },
-      child: _WorkStepCard(
-        width: width,
-        showConnector: showConnector,
-        step: step,
-      ),
+      child: _StepCard(width: width, step: step, showConnector: showConnector),
     );
   }
 }
 
-class _WorkStepCard extends StatefulWidget {
-  const _WorkStepCard({
+class _StepCard extends StatefulWidget {
+  const _StepCard({
     required this.width,
-    required this.showConnector,
     required this.step,
+    required this.showConnector,
   });
 
   final double width;
-  final bool showConnector;
   final _WorkStep step;
+  final bool showConnector;
 
   @override
-  State<_WorkStepCard> createState() => _WorkStepCardState();
+  State<_StepCard> createState() => _StepCardState();
 }
 
-class _WorkStepCardState extends State<_WorkStepCard> {
+class _StepCardState extends State<_StepCard> {
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final step = widget.step;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _isHovered = true),
@@ -192,66 +227,98 @@ class _WorkStepCardState extends State<_WorkStepCard> {
         clipBehavior: Clip.none,
         children: [
           AnimatedScale(
-            scale: _isHovered ? 1.035 : 1,
-            duration: const Duration(milliseconds: 230),
+            scale: _isHovered ? 1.03 : 1.0,
+            duration: const Duration(milliseconds: 220),
             curve: Curves.easeOutCubic,
             child: SizedBox(
               width: widget.width,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 260),
                 curve: Curves.easeOutCubic,
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 26),
+                padding: const EdgeInsets.all(26),
                 decoration: BoxDecoration(
                   color: _isHovered
-                      ? const Color(0xFF19233A)
-                      : const Color(0xFF151B2E),
-                  borderRadius: BorderRadius.circular(10),
+                      ? Color.lerp(AppColors.surfaceCard, step.accent, 0.07)
+                      : AppColors.surfaceCard,
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: _isHovered
-                        ? const Color(0xFF29B6F6)
-                        : const Color(0xFF1A6B90).withValues(alpha: 0.58),
+                        ? step.accent.withValues(alpha: 0.65)
+                        : AppColors.cardBorder,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF29B6F6)
-                          .withValues(alpha: _isHovered ? 0.20 : 0),
-                      blurRadius: _isHovered ? 32 : 0,
-                      offset: const Offset(0, 16),
+                      color: step.accent.withValues(
+                        alpha: _isHovered ? 0.22 : 0,
+                      ),
+                      blurRadius: 32,
+                      offset: const Offset(0, 14),
                     ),
                   ],
                 ),
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: 130),
+                  constraints: const BoxConstraints(minHeight: 150),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.step.number,
-                        style: Theme.of(context).textTheme.displayLarge
-                            ?.copyWith(
-                              color: const Color(0xFF1C5E89),
-                              fontSize: 48,
-                              fontWeight: FontWeight.w900,
-                              height: 1,
+                      Row(
+                        children: [
+                          // Gradient number badge
+                          ShaderMask(
+                            blendMode: BlendMode.srcIn,
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [
+                                step.accent,
+                                step.accent.withValues(alpha: 0.5),
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              step.number,
+                              style: Theme.of(context).textTheme.displayMedium
+                                  ?.copyWith(
+                                    fontSize: 42,
+                                    fontWeight: FontWeight.w900,
+                                    height: 1,
+                                  ),
                             ),
+                          ),
+                          const Spacer(),
+                          // Icon
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 260),
+                            width: 42,
+                            height: 42,
+                            decoration: BoxDecoration(
+                              color: step.accent.withValues(
+                                alpha: _isHovered ? 0.2 : 0.1,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: step.accent.withValues(alpha: 0.3),
+                              ),
+                            ),
+                            child: Icon(
+                              step.icon,
+                              color: step.accent,
+                              size: 20,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 14),
+                      const SizedBox(height: 18),
                       Text(
-                        widget.step.title,
-                        textAlign: TextAlign.center,
+                        step.title,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: AppColors.foreground,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.2,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 10),
                       Text(
-                        widget.step.description,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: const Color(0xFFE5E7EB),
-                          height: 1.5,
-                        ),
+                        step.description,
+                        style: Theme.of(context).textTheme.bodyMedium
+                            ?.copyWith(color: AppColors.muted, height: 1.65),
                       ),
                     ],
                   ),
@@ -259,30 +326,17 @@ class _WorkStepCardState extends State<_WorkStepCard> {
               ),
             ),
           ),
+          // Arrow connector between cards (desktop 4-col)
           if (widget.showConnector)
             Positioned(
-              right: -28,
-              top: 86,
+              right: -22,
+              top: 40,
               child: AnimatedContainer(
-                width: 28,
-                height: 2,
                 duration: const Duration(milliseconds: 260),
-                color: _isHovered
-                    ? const Color(0xFF29B6F6)
-                    : const Color(0xFF1C5E89),
-              ),
-            ),
-          if (widget.showConnector)
-            Positioned(
-              right: -17,
-              top: 84,
-              child: AnimatedContainer(
-                width: _isHovered ? 6 : 4,
-                height: _isHovered ? 6 : 4,
-                duration: const Duration(milliseconds: 260),
-                decoration: const BoxDecoration(
-                  color: Color(0xFF29B6F6),
-                  shape: BoxShape.circle,
+                child: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: _isHovered ? step.accent : AppColors.subtle,
                 ),
               ),
             ),

@@ -8,7 +8,7 @@ abstract final class _FooterLinks {
   static final Uri github = Uri.parse('https://github.com/ahmadch-fd');
 }
 
-Future<void> _openFooterLink(Uri uri) async {
+Future<void> _openLink(Uri uri) async {
   await launchUrl(uri, webOnlyWindowName: '_blank');
 }
 
@@ -17,10 +17,17 @@ class FooterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(color: Color(0xFF070B18)),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.background, const Color(0xFF03060F)],
+        ),
+        border: Border(top: BorderSide(color: AppColors.glassBorder)),
+      ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 72, 24, 34),
+        padding: const EdgeInsets.fromLTRB(24, 80, 24, 36),
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1180),
@@ -35,9 +42,9 @@ class FooterSection extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _FooterIdentity(),
-                          SizedBox(height: 42),
+                          SizedBox(height: 48),
                           _FooterNavigation(),
-                          SizedBox(height: 42),
+                          SizedBox(height: 48),
                           _FooterContact(),
                         ],
                       );
@@ -47,17 +54,17 @@ class FooterSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(flex: 5, child: _FooterIdentity()),
-                        SizedBox(width: 80),
+                        SizedBox(width: 64),
                         Expanded(flex: 3, child: _FooterNavigation()),
-                        SizedBox(width: 80),
+                        SizedBox(width: 64),
                         Expanded(flex: 5, child: _FooterContact()),
                       ],
                     );
                   },
                 ),
                 const SizedBox(height: 72),
-                const Divider(color: Color(0xFF18243A), height: 1),
-                const SizedBox(height: 24),
+                Divider(color: AppColors.glassBorder, height: 1),
+                const SizedBox(height: 28),
                 const _FooterBottomBar(),
               ],
             ),
@@ -68,6 +75,8 @@ class FooterSection extends StatelessWidget {
   }
 }
 
+// ── Identity ──────────────────────────────────────────────────────────────────
+
 class _FooterIdentity extends StatelessWidget {
   const _FooterIdentity();
 
@@ -76,72 +85,120 @@ class _FooterIdentity extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Logo mark
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                'assets/images/logopotf.png',
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
-                filterQuality: FilterQuality.high,
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                gradient: AppColors.primaryGradient,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.4),
+                    blurRadius: 18,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: const Center(
+                child: Text(
+                  'AB',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                    fontFamily: 'Inter',
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 14),
-            Text(
-              'Ahmad Bilal',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.foreground,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 26),
-        Text(
-          'Crafting high performance Flutter mobile applications where design meets engineering.',
-          style: Theme.of(context).textTheme.bodyLarge
-              ?.copyWith(color: const Color(0xFFD6DEEA), height: 1.65),
-        ),
-        const SizedBox(height: 26),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: const Color(0xFF021D18),
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: const Color(0xFF00D68F)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 7,
-                  height: 7,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF00D68F),
-                    shape: BoxShape.circle,
+                ShaderMask(
+                  blendMode: BlendMode.srcIn,
+                  shaderCallback: (bounds) =>
+                      AppColors.heroTextGradient.createShader(bounds),
+                  child: const Text(
+                    'Ahmad Bilal',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.4,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  'AVAILABLE FOR NEW PROJECTS',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: const Color(0xFF00D68F),
-                    fontSize: 11,
-                    letterSpacing: 0,
+                const Text(
+                  'Flutter Developer',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.muted,
+                    fontFamily: 'Inter',
                   ),
                 ),
               ],
             ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'Crafting high-performance Flutter mobile apps where design meets engineering.',
+          style: Theme.of(context).textTheme.bodyMedium
+              ?.copyWith(color: AppColors.muted, height: 1.75),
+        ),
+        const SizedBox(height: 28),
+        // Availability badge
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          decoration: BoxDecoration(
+            color: AppColors.accentGreen.withValues(alpha: 0.07),
+            borderRadius: BorderRadius.circular(40),
+            border: Border.all(
+              color: AppColors.accentGreen.withValues(alpha: 0.45),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: AppColors.accentGreen,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.accentGreen.withValues(alpha: 0.6),
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 9),
+              Text(
+                'AVAILABLE FOR NEW PROJECTS',
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: AppColors.accentGreen,
+                  letterSpacing: 1.0,
+                  fontSize: 11,
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 }
+
+// ── Navigation ─────────────────────────────────────────────────────────────────
 
 class _FooterNavigation extends StatelessWidget {
   const _FooterNavigation();
@@ -153,20 +210,53 @@ class _FooterNavigation extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _FooterTitle('NAVIGATION'),
+        _FooterLabel('NAVIGATION'),
         const SizedBox(height: 22),
         for (final item in _items) ...[
-          Text(
-            item,
-            style: Theme.of(context).textTheme.bodyMedium
-                ?.copyWith(color: const Color(0xFFD6DEEA)),
-          ),
-          if (item != _items.last) const SizedBox(height: 16),
+          _FooterNavItem(label: item),
+          if (item != _items.last) const SizedBox(height: 14),
         ],
       ],
     );
   }
 }
+
+class _FooterNavItem extends StatefulWidget {
+  const _FooterNavItem({required this.label});
+  final String label;
+
+  @override
+  State<_FooterNavItem> createState() => _FooterNavItemState();
+}
+
+class _FooterNavItemState extends State<_FooterNavItem> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedSlide(
+        offset: _isHovered ? const Offset(0.03, 0) : Offset.zero,
+        duration: const Duration(milliseconds: 200),
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 200),
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w400,
+            color: _isHovered ? AppColors.foreground : AppColors.muted,
+            fontFamily: 'Inter',
+          ),
+          child: Text(widget.label),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Contact ────────────────────────────────────────────────────────────────────
 
 class _FooterContact extends StatelessWidget {
   const _FooterContact();
@@ -176,90 +266,79 @@ class _FooterContact extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _FooterTitle('SOCIAL PULSE'),
+        _FooterLabel('GET IN TOUCH'),
         const SizedBox(height: 22),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
+        Row(
           children: [
-            _SocialButton(
-              icon: Icons.code,
+            _SocialIconButton(
+              icon: Icons.code_rounded,
               label: 'GitHub',
               uri: _FooterLinks.github,
+              color: AppColors.foreground,
             ),
-            _SocialButton(
-              icon: Icons.email_outlined,
+            const SizedBox(width: 10),
+            _SocialIconButton(
+              icon: Icons.email_rounded,
               label: 'Email',
               uri: _FooterLinks.email,
+              color: AppColors.primary,
             ),
-            _SocialButton(
-              icon: Icons.phone_in_talk_outlined,
+            const SizedBox(width: 10),
+            _SocialIconButton(
+              icon: Icons.phone_in_talk_rounded,
               label: 'WhatsApp',
               uri: _FooterLinks.whatsApp,
+              color: AppColors.accentGreen,
             ),
           ],
         ),
-        const SizedBox(height: 26),
+        const SizedBox(height: 28),
         _ContactCard(
           icon: Icons.phone_in_talk_rounded,
-          label: 'QUICK CHAT',
-          value: '+92 3087154021',
+          label: 'WHATSAPP',
+          value: '+92 308 715 4021',
           uri: _FooterLinks.whatsApp,
+          accent: AppColors.accentGreen,
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 12),
         _ContactCard(
           icon: Icons.email_rounded,
           label: 'EMAIL',
           value: 'ahmadbilal01142@gmail.com',
           uri: _FooterLinks.email,
+          accent: AppColors.primary,
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 12),
         _ContactCard(
           icon: Icons.hub_rounded,
           label: 'GITHUB',
           value: 'github.com/ahmadch-fd',
           uri: _FooterLinks.github,
+          accent: AppColors.accentCyan,
         ),
       ],
     );
   }
 }
 
-class _FooterTitle extends StatelessWidget {
-  const _FooterTitle(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-        color: AppColors.foreground,
-        fontSize: 12,
-        fontWeight: FontWeight.w900,
-        letterSpacing: 2.5,
-      ),
-    );
-  }
-}
-
-class _SocialButton extends StatefulWidget {
-  const _SocialButton({
+class _SocialIconButton extends StatefulWidget {
+  const _SocialIconButton({
     required this.icon,
     required this.label,
     required this.uri,
+    required this.color,
   });
 
   final IconData icon;
   final String label;
   final Uri uri;
+  final Color color;
 
   @override
-  State<_SocialButton> createState() => _SocialButtonState();
+  State<_SocialIconButton> createState() => _SocialIconButtonState();
 }
 
-class _SocialButtonState extends State<_SocialButton> {
+class _SocialIconButtonState extends State<_SocialIconButton> {
   bool _isHovered = false;
 
   @override
@@ -269,32 +348,40 @@ class _SocialButtonState extends State<_SocialButton> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
-        onTap: () => _openFooterLink(widget.uri),
-        child: AnimatedContainer(
-          width: 44,
-          height: 44,
-          duration: const Duration(milliseconds: 220),
-          decoration: BoxDecoration(
-            color: _isHovered
-                ? const Color(0xFF17233A)
-                : const Color(0xFF111827),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: _isHovered ? AppColors.primary : const Color(0xFF2A344A),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(
-                  alpha: _isHovered ? 0.2 : 0,
-                ),
-                blurRadius: _isHovered ? 22 : 0,
-                offset: const Offset(0, 12),
+        onTap: () => _openLink(widget.uri),
+        child: AnimatedScale(
+          scale: _isHovered ? 1.1 : 1.0,
+          duration: const Duration(milliseconds: 200),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 220),
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: _isHovered
+                  ? widget.color.withValues(alpha: 0.15)
+                  : AppColors.surfaceCard,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _isHovered
+                    ? widget.color.withValues(alpha: 0.6)
+                    : AppColors.cardBorder,
               ),
-            ],
-          ),
-          child: Tooltip(
-            message: widget.label,
-            child: Icon(widget.icon, color: const Color(0xFFD6DEEA), size: 20),
+              boxShadow: [
+                BoxShadow(
+                  color: widget.color.withValues(alpha: _isHovered ? 0.25 : 0),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Tooltip(
+              message: widget.label,
+              child: Icon(
+                widget.icon,
+                color: _isHovered ? widget.color : AppColors.muted,
+                size: 20,
+              ),
+            ),
           ),
         ),
       ),
@@ -302,64 +389,122 @@ class _SocialButtonState extends State<_SocialButton> {
   }
 }
 
-class _ContactCard extends StatelessWidget {
+class _ContactCard extends StatefulWidget {
   const _ContactCard({
     required this.icon,
     required this.label,
     required this.value,
     required this.uri,
+    required this.accent,
   });
 
   final IconData icon;
   final String label;
   final String value;
   final Uri uri;
+  final Color accent;
+
+  @override
+  State<_ContactCard> createState() => _ContactCardState();
+}
+
+class _ContactCardState extends State<_ContactCard> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => _openFooterLink(uri),
-      borderRadius: BorderRadius.circular(12),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: const Color(0xFF0B1020),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF263149)),
-        ),
-        child: Padding(
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: () => _openLink(widget.uri),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
           padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? widget.accent.withValues(alpha: 0.06)
+                : AppColors.surfaceCard,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: _isHovered
+                  ? widget.accent.withValues(alpha: 0.5)
+                  : AppColors.cardBorder,
+            ),
+          ),
           child: Row(
             children: [
-              Icon(icon, color: const Color(0xFF00D68F), size: 22),
-              const SizedBox(width: 16),
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: widget.accent.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: widget.accent.withValues(alpha: 0.25),
+                  ),
+                ),
+                child: Icon(widget.icon, color: widget.accent, size: 18),
+              ),
+              const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      label,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: const Color(0xFF8792A8),
+                      widget.label,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: AppColors.subtle,
                         fontSize: 10,
-                        letterSpacing: 0,
+                        letterSpacing: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 2),
                     Text(
-                      value,
+                      widget.value,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppColors.foreground,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
                       ),
                     ),
                   ],
                 ),
               ),
+              AnimatedOpacity(
+                opacity: _isHovered ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 200),
+                child: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: widget.accent,
+                  size: 14,
+                ),
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ── Shared ─────────────────────────────────────────────────────────────────────
+
+class _FooterLabel extends StatelessWidget {
+  const _FooterLabel(this.text);
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+        color: AppColors.foreground,
+        letterSpacing: 2.5,
+        fontSize: 11,
       ),
     );
   }
@@ -373,17 +518,24 @@ class _FooterBottomBar extends StatelessWidget {
     return Wrap(
       alignment: WrapAlignment.spaceBetween,
       spacing: 24,
-      runSpacing: 14,
+      runSpacing: 10,
       children: [
         Text(
-          '(c) 2026 Ahmad Bilal. Built with passion & Flutter.',
-          style: Theme.of(context).textTheme.bodyMedium
-              ?.copyWith(color: const Color(0xFF8792A8)),
+          '© 2026 Ahmad Bilal · Built with Flutter',
+          style: Theme.of(context).textTheme.bodySmall
+              ?.copyWith(color: AppColors.subtle),
         ),
-        Text(
-          'github.com/ahmadch-fd',
-          style: Theme.of(context).textTheme.bodyMedium
-              ?.copyWith(color: const Color(0xFF8792A8), letterSpacing: 0.8),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.favorite_rounded, size: 13, color: AppColors.primary),
+            const SizedBox(width: 6),
+            Text(
+              'Crafted with passion',
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: AppColors.subtle),
+            ),
+          ],
         ),
       ],
     );

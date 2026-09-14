@@ -159,21 +159,47 @@ class _ProjectsSectionState extends State<ProjectsSection>
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 112),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 100),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1180),
           child: Column(
             children: [
-              AnimatedBuilder(
-                animation: _shineController,
-                builder: (context, child) {
-                  return _AnimatedProjectsTitle(
-                    progress: _shineController.value,
-                  );
-                },
+              Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: AppColors.primary.withValues(alpha: 0.4),
+                      ),
+                    ),
+                    child: Text(
+                      'PORTFOLIO',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: AppColors.primary,
+                        letterSpacing: 2.5,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  AnimatedBuilder(
+                    animation: _shineController,
+                    builder: (context, child) {
+                      return _AnimatedProjectsTitle(
+                        progress: _shineController.value,
+                      );
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 44),
+              const SizedBox(height: 48),
               LayoutBuilder(
                 builder: (context, constraints) {
                   final width = constraints.maxWidth;
@@ -347,13 +373,13 @@ class _ProjectCardState extends State<_ProjectCard> {
             width: widget.width,
             decoration: BoxDecoration(
               color: _isHovered
-                  ? Color.lerp(const Color(0xFF111827), project.accent, 0.12)
-                  : const Color(0xFF111827),
-              borderRadius: BorderRadius.circular(10),
+                  ? Color.lerp(AppColors.surfaceCard, project.accent, 0.1)
+                  : AppColors.surfaceCard,
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color: _isHovered
-                    ? project.accent.withValues(alpha: 0.78)
-                    : const Color(0xFF16425D),
+                    ? project.accent.withValues(alpha: 0.75)
+                    : AppColors.cardBorder,
               ),
               boxShadow: [
                 BoxShadow(
@@ -367,7 +393,7 @@ class _ProjectCardState extends State<_ProjectCard> {
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -434,7 +460,7 @@ class _ProjectDetailsDialog extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 240),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0F172A),
+                  color: AppColors.surfaceCard,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: project.accent.withValues(alpha: 0.72),
